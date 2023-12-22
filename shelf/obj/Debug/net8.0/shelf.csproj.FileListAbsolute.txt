@@ -1,0 +1,14 @@
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\shelf.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\shelf.AssemblyInfoInputs.cache
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\shelf.AssemblyInfo.cs
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\shelf.csproj.CoreCompileInputs.cache
+C:\Users\xande\source\repos\shelf\shelf\bin\Debug\net8.0\Shelf.exe
+C:\Users\xande\source\repos\shelf\shelf\bin\Debug\net8.0\Shelf.deps.json
+C:\Users\xande\source\repos\shelf\shelf\bin\Debug\net8.0\Shelf.runtimeconfig.json
+C:\Users\xande\source\repos\shelf\shelf\bin\Debug\net8.0\Shelf.dll
+C:\Users\xande\source\repos\shelf\shelf\bin\Debug\net8.0\Shelf.pdb
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\Shelf.dll
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\refint\Shelf.dll
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\Shelf.pdb
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\Shelf.genruntimeconfig.cache
+C:\Users\xande\source\repos\shelf\shelf\obj\Debug\net8.0\ref\Shelf.dll
