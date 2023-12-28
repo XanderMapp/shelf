@@ -1,6 +1,6 @@
 ﻿namespace Shelf
 {
-    public class Merger
+    public class Merger : Turtle
     {
 
     }

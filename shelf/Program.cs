@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+
 namespace Shelf
 {
     internal class Program
@@ -7,52 +8,62 @@ namespace Shelf
         {
             try
             {
-                string? mutators, path;
-                char alterType;
                 char[] properMutators = new char[5];
-                bool userHasQuit = false;
-                SqliteConnection dbConn;
+                
+                //Upon start of program, do three things
+                //1. Load the dictionary of actions to be used.
+                Dictionary<char,string> mutatorActions = new Dictionary<char,string>();
+                LoadActions(mutatorActions);
+                
+                //2. Create a connection to the SQLite database. (the shelfdata.sqlite file.)
+                SqliteConnection dbConn = CreateConnection();
 
-
-                dbConn = CreateConnection();
-
-                //Instantiate a new ShelfParser
+                //3. Instantiate a new ShelfParser
                 Parser shelfParser = new Parser();
 
+                bool userHasQuit = false;
                 while (!userHasQuit)
                 {
-                    List<File> newDirListFiles;
-                    List<Folder> newDirListFolders;
-                    
-                    alterType = GetValidChar("What would you like to do? " +
-                                             "(A) - New Directory" +
-                                             "(B) - Directories in Database");
+                    Console.Write("What would you like to do? " +
+                                  "(A) - New Directory" +
+                                  "(B) - Directories in Database" +
+                                  "(Q) - Quit");
+                    var alterType = GetValidChar("What would you like to do?");
                     switch (char.ToUpper(alterType))
                     {
                         case 'A':
+                        {
                             Console.Write("What is the path to the folder you wish to upload? ");
-                            path = Console.ReadLine();
-
+                            string? path = Console.ReadLine();
+                            
                             if (path != null)
                             {
-                                newDirListFiles = MakeFileListFromDirectory(path);
-                                newDirListFolders = MakeFolderListFromDirectory(path);
-                                InsertData(dbConn,newDirListFiles,newDirListFolders);
+                                List<File> newDirListFiles = MakeFileListFromDirectory(path);
+                                List<Folder> newDirListFolders = MakeFolderListFromDirectory(path);
+                                InsertData(dbConn, newDirListFiles, newDirListFolders);
                             }
                             break;
+                        }
                         case 'B':
+                        {
                             ReadData(dbConn);
                             break;
+                        }
+                        case 'Q':
+                        {
+                            userHasQuit = true;
+                            break;
+                        }
                     }
 
                     Console.Write("Enter File Equation (5 operands max!): ");
-                    mutators = Console.ReadLine();
+                    string? mutators = Console.ReadLine();
                     if (mutators != null)
                     {
                         properMutators = mutators.ToCharArray();
                     }
 
-                    shelfParser.Parse(properMutators);
+                    shelfParser.Parse(properMutators,mutatorActions);
                 }
             }
             catch (Exception ex)
@@ -77,6 +88,7 @@ namespace Shelf
 
             return validChar;
         }
+
         static List<File> MakeFileListFromDirectory(string path)
         {
             File tempFile;
@@ -92,7 +104,7 @@ namespace Shelf
                 tempFileInfo = new FileInfo(aFileName);
 
                 //Creation of new file, with info encoded into it.
-                tempFile = new File(tempFileInfo.Name, tempFileInfo.DirectoryName, tempFileInfo.Extension,
+                tempFile = new File(tempFileInfo.Name, tempFileInfo.DirectoryName, tempFileInfo.Extension,"tempFileInfo",
                     tempFileInfo.LastWriteTime, tempFileInfo.Length);
 
                 files.Add(tempFile);
@@ -106,9 +118,12 @@ namespace Shelf
             Folder tempFolder;
             DirectoryInfo tempFolderInfo;
             List<Folder> folders = new List<Folder>();
-            string[] folderNames;
+            string[] folderNames, fileNames;
 
             folderNames = Directory.GetDirectories(path);
+            fileNames = Directory.GetFiles(path);
+
+            var combinedToAdd = folderNames.Concat(fileNames).ToArray();
 
             foreach (string aFolderName in folderNames)
             {
@@ -116,10 +131,11 @@ namespace Shelf
                 tempFolderInfo = new DirectoryInfo(aFolderName);
 
                 //Creation of new folder, with info encoded into it.
-                tempFolder = new Folder(tempFolderInfo.Name, tempFolderInfo.FullName, tempFolderInfo.Extension,tempFolderInfo.LastWriteTime);
+                tempFolder = new Folder(tempFolderInfo.Name, tempFolderInfo.FullName, tempFolderInfo.Extension,combinedToAdd,tempFolderInfo.LastWriteTime);
 
                 folders.Add(tempFolder);
             }
+
             return folders;
         }
 
@@ -162,6 +178,7 @@ namespace Shelf
                 dbCommand.ExecuteNonQuery();
             }
         }
+
         static void ReadData(SqliteConnection connection)
         {
             SqliteDataReader dbDatareader;
@@ -177,7 +194,24 @@ namespace Shelf
                 string myreader = dbDatareader.GetString(0);
                 Console.WriteLine(myreader);
             }
+
             connection.Close();
+        }
+
+        static void LoadActions(Dictionary<char, string> mutatorList)
+        {
+            mutatorList.Add('>',"MERGE RIGHT");
+            mutatorList.Add('<',"MERGE LEFT");
+            mutatorList.Add('|',"MERGE DEFAULT");
+            mutatorList.Add('+',"APPEND");
+            mutatorList.Add('/',"DELETE");
+            mutatorList.Add('/',"SPLIT RIGHT");
+            mutatorList.Add('\\',"SPLIT LEFT");
+        }
+
+        static void Documentation()
+        {
+            
         }
     }
 }

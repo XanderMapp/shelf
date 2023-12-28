@@ -25,7 +25,7 @@
             {
                 return _size;
             }
-            set
+            protected init
             {
                 if (value <= 0)
                 {

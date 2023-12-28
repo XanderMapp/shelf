@@ -17,7 +17,7 @@ namespace Shelf
         {
             
         }
-        public File(string? name, string? path, string? type, DateTime lastEdited, long size)
+        public File(string? name, string? path, string? type,string? content, DateTime lastEdited, long size)
         {
             Name = name;
             Path = path;
