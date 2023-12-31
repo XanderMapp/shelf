@@ -1,10 +1,13 @@
-﻿using SysIO = System.IO;
+﻿using Microsoft.Data.Sqlite;
+using SysIO = System.IO;
 
 namespace Shelf
 {
     public class Turtle
     {
         private bool _isOn;
+
+        public SqliteConnection? DbConn { get; set; }
 
         public bool IsOn
         {
@@ -24,7 +27,7 @@ namespace Shelf
 
         public bool FinishedJob { get; set; }
 
-        protected static string DocumentDataRead(File aFile)
+        public static string DocumentDataRead(File? aFile)
         {
             string docText = "";
 
@@ -38,6 +41,7 @@ namespace Shelf
                     {
                         docText += reader.ReadLine();
                     }
+
                     reader.Close();
                 }
                 catch (Exception ex)
@@ -51,6 +55,26 @@ namespace Shelf
             }
 
             return docText;
+        }
+
+        public static void InsertSingleFileData(SqliteConnection? connection, File aFile)
+        {
+            SqliteCommand dbCommand = connection.CreateCommand();
+
+            dbCommand.CommandText =
+                $"INSERT INTO Files(FileID,Name,Path,Type,Content,LastEdited,Size) VALUES(ROWID,{aFile.Name},{aFile.Path},{aFile.Type},{aFile.Content},{aFile.LastEdited},{aFile.Size})";
+
+            dbCommand.ExecuteNonQuery();
+        }
+
+        public static void InsertSingleFolderData(SqliteConnection connection, Folder aFolder)
+        {
+            SqliteCommand dbCommand = connection.CreateCommand();
+
+            dbCommand.CommandText =
+                $"INSERT INTO Folders(FolderID,Name,Path,Type,Subcontent,LastEdited,Size) VALUES(ROWID,{aFolder.Name},{aFolder.Path},{aFolder.Type},{aFolder.Content},{aFolder.LastEdited},{aFolder.Size})";
+
+            dbCommand.ExecuteNonQuery();
         }
     }
 }

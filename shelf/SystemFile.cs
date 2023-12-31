@@ -8,6 +8,7 @@
         public string? Name { get; set; }
         public string? Path { get; set; }
         public string? Type { get; set; }
+        public string? Content { get; set; }
         public DateTime LastEdited
         {
             get
@@ -24,8 +25,8 @@
             get
             {
                 return _size;
-            }
-            protected init
+            } 
+            set
             {
                 if (value <= 0)
                 {
@@ -42,11 +43,7 @@
         /// </summary>
         protected SystemFile()
         {
-            Name = Name;
-            Path = Path;
-            Type = Type;
-            LastEdited = _lastEdited;
-            Size = _size;
+
         }
         /// <summary>
         /// Overload 1 for SystemFile constructor, needs everything to construct
@@ -56,11 +53,13 @@
         /// <param name="type"></param>
         /// <param name="lastEdited"></param>
         /// <param name="size"></param>
-        public SystemFile(string? name, string? path, string? type, DateTime lastEdited, long size)
+        /// <param name="content"></param>
+        public SystemFile(string? name, string? path, string? type, string? content, DateTime lastEdited, long size)
         {
             Name = name;
             Path = path;
             Type = type;
+            Content = content;
             LastEdited = lastEdited;
             Size = size;
         }

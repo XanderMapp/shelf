@@ -10,11 +10,12 @@
         {
             
         }
-        public Folder(string? name, string? path, string? type, string[]files, DateTime lastEdited)
+        public Folder(string? name, string? path, string? type, string[]?files, DateTime lastEdited)
         {
             Name = name;
             Path = path;
             Type = type;
+            Content = files?.ToString();
             LastEdited = lastEdited;
         }
     }
